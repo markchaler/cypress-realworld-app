@@ -298,3 +298,36 @@ Cypress.Commands.add("database", (operation, entity, query, logTask = false) => 
     return data;
   });
 });
+
+Cypress.Commands.add("loginByGoogleApi", () => {
+  cy.log("Logging in to Google");
+
+  cy.request({
+    method: "POST",
+    url: Cypress.env("googleRefreshUrl"),
+    body: {
+      grant_type: "refresh_token",
+      client_id: Cypress.env("googleClientId"),
+      client_secret: Cypress.env("googleClientSecret"),
+      refresh_token: Cypress.env("googleRefreshToken"),
+    },
+  }).then((resp) => {
+    cy.log(resp);
+    /*
+    const userItem = {
+      token: tokens.accessToken.value,
+      user: {
+        sub: user.id,
+        email: user.profile.login,
+        given_name: user.profile.firstName,
+        family_name: user.profile.lastName,
+        preferred_username: user.profile.login,
+      },
+    };
+
+    window.localStorage.setItem("googleCypress", JSON.stringify(userItem));
+
+    cy.visit("/");
+    */
+  });
+});
