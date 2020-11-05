@@ -4,7 +4,6 @@
 import { pick } from "lodash/fp";
 import { format as formatDate } from "date-fns";
 import { isMobile } from "./utils";
-import { verify as verifyJwt } from "jsonwebtoken";
 
 Cypress.Commands.add("getBySel", (selector, ...args) => {
   return cy.get(`[data-test=${selector}]`, ...args);
