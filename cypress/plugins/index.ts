@@ -11,7 +11,6 @@ dotenv.config();
 export default (on, config) => {
   config.env.defaultPassword = process.env.SEED_DEFAULT_USER_PASSWORD;
   config.env.paginationPageSize = process.env.PAGINATION_PAGE_SIZE;
-  config.env.googleRefreshUrl = process.env.GOOGLE_REFRESH_URL;
   config.env.googleRefreshToken = process.env.GOOGLE_REFRESH_TOKEN;
   config.env.googleClientId = process.env.REACT_APP_GOOGLE_CLIENTID;
   config.env.googleClientSecret = process.env.REACT_APP_GOOGLE_CLIENT_SECRET;

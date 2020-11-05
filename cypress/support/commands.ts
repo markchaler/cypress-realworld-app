@@ -4,6 +4,7 @@
 import { pick } from "lodash/fp";
 import { format as formatDate } from "date-fns";
 import { isMobile } from "./utils";
+import { verify as verifyJwt } from "jsonwebtoken";
 
 Cypress.Commands.add("getBySel", (selector, ...args) => {
   return cy.get(`[data-test=${selector}]`, ...args);
@@ -304,30 +305,30 @@ Cypress.Commands.add("loginByGoogleApi", () => {
 
   cy.request({
     method: "POST",
-    url: Cypress.env("googleRefreshUrl"),
+    url: "https://www.googleapis.com/oauth2/v4/token",
     body: {
       grant_type: "refresh_token",
       client_id: Cypress.env("googleClientId"),
       client_secret: Cypress.env("googleClientSecret"),
       refresh_token: Cypress.env("googleRefreshToken"),
     },
-  }).then((resp) => {
-    cy.log(resp);
-    /*
-    const userItem = {
-      token: tokens.accessToken.value,
-      user: {
-        sub: user.id,
-        email: user.profile.login,
-        given_name: user.profile.firstName,
-        family_name: user.profile.lastName,
-        preferred_username: user.profile.login,
-      },
-    };
+  }).then(({ body }) => {
+    const { access_token } = body;
 
-    window.localStorage.setItem("googleCypress", JSON.stringify(userItem));
+    cy.request({
+      method: "GET",
+      url: "https://www.googleapis.com/oauth2/v3/userinfo",
+      headers: { Authorization: `Bearer ${access_token}` },
+    }).then(({ body }) => {
+      cy.log(body);
+      const userItem = {
+        token: access_token,
+        user: body,
+      };
 
-    cy.visit("/");
-    */
+      window.localStorage.setItem("googleCypress", JSON.stringify(userItem));
+
+      cy.visit("/");
+    });
   });
 });
